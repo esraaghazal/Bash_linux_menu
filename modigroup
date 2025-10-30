@@ -1,0 +1,27 @@
+#!/bin/bash
+
+groupmodify()
+{
+	local groupname
+	groupname=$(whiptail --inputbox "Enter the new Group name :" 8 39 "" --title "change group name" 3>&1 1>&2 2>&3)
+    	exitstatus=$?
+
+	if [ $exitstatus -ne 0 ] || [ -z "$old_groupname" ]; then
+        	whiptail --msgbox "Operation cancelled or group name is empty." 8 40 --title "Error"
+      	  return 1
+    	fi
+
+#---------------------- check if group exist -------------------------------------------------------
+
+	if [ $(awk -F: '$1 == "'"$groupname"'" {print $0}' /etc/group | wc -l) -eq 0 ]; then
+        	whiptail --msgbox "Error:  '$groupname' does not exist." 8 50 --title "Error"
+        	return 1
+    	fi
+
+	choice=$(whiptail --title "Modify Group" --menu "Choose an option" 20 68 10 \
+	    "RENAME" "Change the name of the group." \
+	    "ADD_USER" "Add a user to the group." \
+	    "GID" "Modify Group ID." \
+	    "REMOVE_USER" "Remove a user from the group." 3>&1 1>&2 2>&3)
+}
+groupmodify

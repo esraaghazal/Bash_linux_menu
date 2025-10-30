@@ -1,0 +1,47 @@
+#!/bin/bash
+
+userdel()
+{
+
+	local username
+
+	username=$(whiptail --inputbox "Type the User name to delete:" 8 39 "" --title "Delete User" 3>&1 1>&2 2>&3)
+	exitstatus=$?
+
+
+	 if [ -z "$username" ]; then
+        	whiptail --msgbox "Username cannot be empty!" 8 50 --title "Error"
+        	return
+    	fi
+	
+	#--------------------- check if user exist -------------------------
+
+
+	if ! id "$username" &>/dev/null; then
+        	whiptail --msgbox "User '$username' does not exist!" 8 50 --title "Error"
+        	return
+    	fi
+ 
+	if	
+		whiptail --title "Delete User" --yesno "WARNING: Are you sure you want to permanently delete user '$username'" 10 60
+	 then
+       
+        	whiptail --msgbox "Deleting user $username ..." 8 50 --title "Deleting"
+
+
+	#--------------------------- deleting --------------------------------------
+        
+       		 sudo userdel -r "$username"
+
+	#--------------------- check if user has been deleted --------------------
+	if [ $? -eq 0 ] 
+	then
+            whiptail --msgbox "User '$username' deleted ." 8 50 --title "Success"
+        else
+            whiptail --msgbox "Error deleting user '$username'. Check logs." 8 60 --title "Failure"
+        fi
+    	else
+            whiptail --msgbox "Deletion of user '$username' cancelled." 8 50
+   	fi
+}
+userdel

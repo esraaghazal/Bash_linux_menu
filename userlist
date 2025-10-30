@@ -1,0 +1,10 @@
+#!/bin/bash
+
+listusers ()
+{
+	local listusers="$(awk -F ':' '{print NR, $1}' /etc/passwd)"
+	
+	whiptail --scrolltext --msgbox  "Users:\n$listusers" 25 80 --title "List Users"
+
+}
+listusers

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+grouplist()
+{
+	local list
+	list=$(awk -F ':' '{print NR, $1}' /etc/group)
+
+	if [ -z "$list" ]; then
+        	whiptail --msgbox "No groups found on the system!" 8 50 --title "Groups"
+        	return
+    	fi
+
+	whiptail --scrolltext --msgbox  "Users:\n$list" 25 80 --title "List Groups"
+}
+grouplist

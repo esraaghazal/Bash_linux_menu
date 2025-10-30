@@ -1,0 +1,106 @@
+#!/bin/bash
+
+usermodify() {
+    
+    local username
+
+    
+    username=$(whiptail --inputbox "Type the User name to modify:" 8 39 "" --title "Modify User" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+
+#---------------------checkif user is empty -----------------------------------------------
+
+    if [ $exitstatus -ne 0 ] || [ -z "$username" ]; then
+        whiptail --msgbox "username is empty." 8 40 --title "Error"
+        return 1
+    fi
+
+#------------------------ check if user exist --------------------------------------------
+    id $username
+
+    if [ $? -ne 0 ] 
+    then
+        whiptail --msgbox "Error: User '$username' does not exist." 8 50 --title "Error"
+        return 1
+    fi
+
+#--------------------------- modify options -----------------------------------------------
+
+    choiceVAR=$(whiptail --title "Modify User" --menu "Choose an option" 20 68 10 \
+	"COMMENT" "Modify Comment field." \
+     	"GROUP"   "Modify Primary Group." \
+     	"HOME"    "Modify Directory path." \
+       	"UID"     "Modify User ID (UID)." \
+       	"PASSWORD" "Change Password." 3>&1 1>&2 2>&3) 
+    
+    exitstatus=$?
+#------------------ check if option exist -------------------------------------------------
+
+    if [ $exitstatus -ne 0 ]; then
+        whiptail --msgbox "should select an option" 8 40
+        return 0
+    fi
+
+  
+    case "$choice" in
+        "COMMENT")
+            comment=$(whiptail --inputbox "Enter the new comment :" 10 50 "" --title "Modify $username comment" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$comment" ]; then
+                sudo usermod -c "$comment" $username
+                whiptail --msgbox "Comment for $username updated successfully." 8 50
+            else
+                whiptail --msgbox "Operation cancelled " 8 50
+            fi
+            ;;
+
+        "GROUP")
+            group=$(whiptail --inputbox "Enter the new primary group name " 10 50 "" --title "Modify $username  primary group name " 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$group" ]; then
+                sudo usermod -g "$group" "$username"
+                whiptail --msgbox "Primary group for $username updated successfully." 8 50
+            else
+                whiptail --msgbox "Operation cancelled" 8 50
+            fi
+            ;;
+
+        "HOME")
+            homedir=$(whiptail --inputbox "Enter the new home directory path :" 10 50 "/home/$username" --title "" Modify $username home directory path "" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$homedir" ]; then
+                sudo usermod -d "$homedir" -m "$username"
+                whiptail --msgbox "Home directory for $username updated and moved successfully." 8 60
+            else
+                whiptail --msgbox "Operation cancelled" 8 60
+            fi
+            ;;
+
+        "UID")
+            uid=$(whiptail --inputbox "Enter the new UID :" 10 50 "" --title ""Modify UID for $username"" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$uid" ] && [[ "$uid" =~ ^[0-9]+$ ]]; then
+                sudo usermod -u "$uid" "$username"
+                whiptail --msgbox "UID for $username updated successfully." 8 50
+            else
+                whiptail --msgbox "invalid UID entered." 8 50 --title "Error"
+            fi
+            ;;
+
+        "PASSWORD")
+	 
+ 	password=$(whiptail --passwordbox "please enter your password" 8 78 --title "password dialog" 3>&1 1>&2 2>&3)
+        echo $password |  sudo passwd $username  --stdin
+        
+	whiptail --msgbox "Password set successfully for $username." 8 50 --title "Success"
+
+      	 if [ $? -eq 0 ]; then
+           whiptail --msgbox "Password set successfully for $username." 8 50
+       	 else
+            whiptail --msgbox "Failed to set password." 8 50 --title "Error"
+         fi
+        ;;
+
+        *)
+            whiptail --msgbox "Unknown option selected." 8 40
+            ;;
+    esac
+}
+
+usermodify

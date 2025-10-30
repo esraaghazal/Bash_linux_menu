@@ -1,0 +1,33 @@
+#!/bin/bash 
+groupadd()
+{
+	local groupname
+	groupname=$(whiptail --inputbox "Enter the group name:" 10 50 "" --title "Add Group" 3>&1 1>&2 2>&3)
+	
+#-------------- check if group name empty ---------------
+
+	if [ $exitstatus -ne 0 ] && [ -z "$groupname" ]; then
+        	whiptail --msgbox "Operation cancelled." 8 40 --title "Cancelled"
+        	return
+    	
+	fi
+
+#----------- check if group already exist ----------------
+
+
+	if getent group "$groupname" > /dev/null 2>&1; then
+        	whiptail --msgbox "Group '$groupname' already exists! Cannot create it again." 8 60 --title "Error"
+        	return
+    	fi
+	
+
+	add= sudo add $groupname 
+	
+	if $add 
+	then 
+		whiptail --msgbox "Group '$groupname' created successfully!" 8 50 --title "Success"
+	else
+		whiptail --msgbox "Failed to create group '$groupname'." 8 50 --title "Failure"
+	fi
+}
+groupadd

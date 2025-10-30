@@ -1,0 +1,74 @@
+#!/bin/bash
+
+adduser ()
+{
+
+        local username
+        local pass
+        local add
+
+#-------------------- Ask for username --------------------
+
+        username=$(whiptail --inputbox "Enter you user name" 8 39 --title "Example Dialog" 3>&1 1>&2 2>&3)
+        exitstatus=$?
+
+
+        if [ $exitstatus -eq 0 ]
+        then
+                echo "User selected Ok and entered " $username
+        else
+                echo "User selected Cancel."
+        fi
+
+#----------- check if user exists ----------------------
+
+
+        if id "$username" &>/dev/null
+        then
+                whiptail --msgbox "User '$username' already exists! Cannot create it again." 8 60 --title "Error"
+                return
+        fi
+
+#-------------------- Create the user --------------------
+                                    
+
+sudo useradd $username
+
+#------------- take password from user ----------------
+
+        if [ $? -eq 0 ]
+        then
+                whiptail --msgbox "User '$username' created successfully! Now setting password..." 8 50 --title "Success"
+
+#-------------- Enter your pass --------------------
+
+                pass=$(whiptail --passwordbox "Please enter your secret password:" 8 60 --title "Password Dialog" 3>&1 1>&2 2>&3)
+                exitstatus=$?
+
+                if [ $exitstatus -ne 0 ]
+                then
+                        whiptail --msgbox "Password setup cancelled. User created without password." 8 60 --title "Warning"
+                        return
+                fi
+
+                if [ -z "$pass" ]; then
+                        whiptail --msgbox "Password cannot be empty! Please try again." 8 60 --title "Error"
+                        sudo userdel "$username"
+                        return
+                fi
+
+#-------------------- Set password --------------------
+
+                if [ $? -eq 0 ]; then
+                        whiptail --msgbox "Password set successfully for '$username'." 8 50 --title "Success"
+                else
+                        whiptail --msgbox "Failed to set password for '$username'." 8 50 --title "Failure"
+                fi
+        else
+        whiptail --msgbox "Failed to create user '$username'. Please check system logs for errors." 8 60 --title "Failure"
+        fi
+
+
+}
+
+adduser

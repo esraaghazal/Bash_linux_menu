@@ -1,0 +1,30 @@
+#!/bin/bash
+
+groupdell()
+{
+        local groupname
+        groupname=$(whiptail --inputbox "Enter the Group name to delete:" 8 45 "" --title "Delete Group" 3>&1 1>&2 2>&3)
+        exitstatus=$?
+#------------------------- check if groupname is empty ---------------
+        if [ $exitstatus -ne 0 ] || [ -z "$groupname" ]; then
+                whiptail --msgbox "Operation cancelled" 8 40 --title "Error"
+                return 1
+        fi
+
+        if getent group "$groupname" > /dev/null 2>&1; then
+                if whiptail --title "Delete Group" --yesno "WARNING: Are you absolutely sure you want to delete Group '$groupname' " 10 60; then
+                        sudo groupdel "$groupname"
+                fi
+        else
+                whiptail --msgbox "Error: Group '$groupname' does not exist." 8 50 --title "Error"
+
+        fi
+
+        if [ $? -eq 0 ]; then
+            whiptail --msgbox "Group '$groupname' deleted successfully." 8 50 --title "Success"
+        else
+                whiptail --msgbox "Deletion of group '$groupname' cancelled." 8 50
+        fi
+}
+groupdell
+

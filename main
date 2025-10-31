@@ -1,0 +1,51 @@
+#!/bin/bash
+
+source ./useradd
+source ./userdel
+source ./userlist
+source ./usermodify
+source ./addgroup
+source ./groupdell
+source ./listgroup
+source ./modigroup
+source ./enableuser
+source ./disableuser
+source ./about
+source ./exit
+
+menue()
+{
+        choice=$(whiptail --title "Main Menu" --menu "Choose an option" 25 78 16 \
+           "ADD_USER"       "Add a user to the system." \
+           "MODIFY_USER"    "Modify an existing user." \
+           "DELETE_USER"    "Delete an existing user." \
+           "LIST_USERS"     "List all users on the system." \
+           "ADD_GROUP"      "Add a user group to the system." \
+           "MODIFY_GROUP"   "Modify a group and its list of members." \
+           "DELETE_GROUP"   "Delete an existing group." \
+           "LIST_GROUPS"    "List all groups on the system." \
+           "DISABLE_USER"   "Lock the user account." \
+           "ENABLE_USER"    "Unlock the user account." \
+           "ABOUT"          "About this program." \
+           "EXIT"           "Exit this program." 3>&1 1>&2 2>&3)
+
+
+        case $choice in
+        "ADD_USER") adduser;;
+        "MODIFY_USER") usermodify;;
+        "DELETE_USER") userdel;;
+        "LIST_USERS") listusers;;
+        "ADD_GROUP") group_add;;
+        "MODIFY_GROUP") groupmodify;;
+        "DELETE_GROUP") groupdell;;
+        "LIST_GROUPS") grouplist;;
+        "DISABLE_USER") disableuser;;
+        "ENABLE_USER") enableuser;;
+        "ABOUT") about;;
+        "EXIT") exit;;
+    esac
+
+
+}
+menue
+

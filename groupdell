@@ -26,5 +26,3 @@ groupdell()
                 whiptail --msgbox "Deletion of group '$groupname' cancelled." 8 50
         fi
 }
-groupdell
-

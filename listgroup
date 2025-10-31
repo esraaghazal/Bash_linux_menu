@@ -12,4 +12,3 @@ grouplist()
 
 	whiptail --scrolltext --msgbox  "Users:\n$list" 25 80 --title "List Groups"
 }
-grouplist

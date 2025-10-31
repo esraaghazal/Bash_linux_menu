@@ -1,0 +1,20 @@
+about() {
+    whiptail --title "About This Project" --msgbox "
+    	This project is a simple command-line and dialog-based tool built with Bash.
+        It allows system administrators to manage users and groups easily through
+        interactive menus using the Whiptail interface.
+
+        Main Features:
+        • Add, modify, delete, and list users.
+        • Add, modify, delete, and list groups.
+        • Enable (unlock) or disable (lock) user accounts.
+        • Clear and user-friendly interface with validation messages.
+
+
+        Technologies Used:
+        • Bash scripting
+        • Whiptail (for graphical text-based menus)
+        • Linux user & group management commands
+    " 20 60
+}
+

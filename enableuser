@@ -1,0 +1,26 @@
+#!/bin/bash
+
+enableuser()
+{
+	local username
+
+	username=$(whiptail --inputbox "Enter  User name to ENABLE :" 8 45 "" --title "Enable User" 3>&1 1>&2 2>&3)
+    	exitstatus=$?
+
+	if [ $exitstatus -ne 0 ] || [ -z "$username" ]; then
+        	whiptail --msgbox "Operation cancelled ." 8 40 --title "Error"
+        	return 1
+    	fi
+#---------------------- check if user exist ---------------------
+	if [ $? -ne 0 ]; then
+        	whiptail --msgbox "Error: User '$username' does not exist." 8 50 --title "Error"
+        	return 1
+    	fi
+
+	sudo usermod -U "$usernameVAR"   
+    	if [ $? -eq 0 ]; then
+            whiptail --msgbox "User '$username' has been successfully ENABLED ." 8 50 --title "Success"
+    	else
+            whiptail --msgbox "Error ." 8 50 --title "Failure"
+    	fi
+}

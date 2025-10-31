@@ -26,7 +26,7 @@ usermodify() {
 
 #--------------------------- modify options -----------------------------------------------
 
-    choiceVAR=$(whiptail --title "Modify User" --menu "Choose an option" 20 68 10 \
+    choice=$(whiptail --title "Modify User" --menu "Choose an option" 20 68 10 \
 	"COMMENT" "Modify Comment field." \
      	"GROUP"   "Modify Primary Group." \
      	"HOME"    "Modify Directory path." \
@@ -103,4 +103,3 @@ usermodify() {
     esac
 }
 
-usermodify

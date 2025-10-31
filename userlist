@@ -7,4 +7,3 @@ listusers ()
 	whiptail --scrolltext --msgbox  "Users:\n$listusers" 25 80 --title "List Users"
 
 }
-listusers

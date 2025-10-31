@@ -2,7 +2,7 @@
 
 groupmodify()
 {
-	local groupname
+	local groupname choise newname username
 	groupname=$(whiptail --inputbox "Enter the new Group name :" 8 39 "" --title "change group name" 3>&1 1>&2 2>&3)
     	exitstatus=$?
 
@@ -18,10 +18,66 @@ groupmodify()
         	return 1
     	fi
 
+#-------------------------- list options ---------------------------------------------------------
+
 	choice=$(whiptail --title "Modify Group" --menu "Choose an option" 20 68 10 \
 	    "RENAME" "Change the name of the group." \
 	    "ADD_USER" "Add a user to the group." \
 	    "GID" "Modify Group ID." \
 	    "REMOVE_USER" "Remove a user from the group." 3>&1 1>&2 2>&3)
+
+
+	exitstatus=$?
+    	if [ $exitstatus -ne 0 ]; then
+        	whiptail --msgbox "Modification cancelled." 8 40
+        	return 0
+    	fi
+
+#------------------------------------- cases --------------------------------------------
+
+	case "$choise" in
+        "Change_Name")
+            newname=$(whiptail --inputbox "Enter the new name :" 10 50 "" --title "Change Name" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$newname" ]; then
+                sudo groupmod -n "$newname" "$groupname"
+                whiptail --msgbox "Group '$groupname' renamed to '$newname' successfully." 8 60
+            else
+                whiptail --msgbox "Operation cancelled ." 8 50
+            fi
+            ;;
+
+        "ADD_USER")
+            username=$(whiptail --inputbox "Enter the user name to ADD :" 10 50 "" --title "Add User" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$username" ]; then
+                sudo usermod -aG "$groupname" "$username"
+                whiptail --msgbox "User '$username' added to group '$groupname'." 8 50
+            else
+                whiptail --msgbox "Operation cancelled ." 8 50
+            fi
+            ;;
+
+        "REMOVE_USER")
+            usernameVAR=$(whiptail --inputbox "Enter the user name to REMOVE :" 10 50 "" --title "Remove User" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$username" ]; then
+                sudo gpasswd -d "$username" "$groupname"
+                whiptail --msgbox "User '$username' removed from group '$groupname'." 8 50
+            else
+                whiptail --msgbox "Operation cancelled or username was empty." 8 50
+            fi
+            ;;
+
+    	"GID")
+	    id=$(whiptail --inputbox "Enter your new GID :" 10 50 "" --title "Change GID" 3>&1 1>&2 2>&3)
+            if [ $? -eq 0 ] && [ -n "$id" ]; then
+                sudo groupmod  -g "$id" "$groupname"
+                whiptail --msgbox "The GID for '$groupname' has changed to '$id'." 8 50
+            else
+                whiptail --msgbox "Operation cancelled or username was empty." 8 50
+            fi
+	    ;;
+
+        *)
+            whiptail --msgbox "Unknown option selected." 8 40
+            ;;
+    esac
 }
-groupmodify

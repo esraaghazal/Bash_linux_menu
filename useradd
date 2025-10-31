@@ -9,7 +9,7 @@ adduser ()
 
 #-------------------- Ask for username --------------------
 
-        username=$(whiptail --inputbox "Enter you user name" 8 39 --title "Example Dialog" 3>&1 1>&2 2>&3)
+        username=$(whiptail --inputbox "Enter you user name" 8 39 --title "Password Dialog"  3>&1 1>&2 2>&3)
         exitstatus=$?
 
 
@@ -71,4 +71,3 @@ sudo useradd $username
 
 }
 
-adduser

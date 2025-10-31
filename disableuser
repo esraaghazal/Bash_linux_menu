@@ -1,0 +1,34 @@
+#!/bin/bash
+
+disableuser()
+{
+	local username 
+
+	username=$(whiptail --inputbox "Type the User name to DISABLE :" 8 45 "" --title "Disable User" 3>&1 1>&2 2>&3)
+    	exitstatus=$?
+
+	if [ $exitstatus -ne 0 ] || [ -z "$username" ]; then
+        	whiptail --msgbox "Operation cancelled." 8 40 --title "Error"
+        	return 1
+    	fi
+
+	id $username
+    	if [ $? -ne 0 ]; then
+        	whiptail --msgbox "Error: User '$username' does not exist." 8 50 --title "Error"
+        	return 1
+    	fi
+
+
+	if whiptail --title "Disable User" --yesno "Are you sure you want to disable user ?" 8 50; then
+      		sudo usermod -L "$username"
+        
+        	if [ $? -eq 0 ]; then
+            		whiptail --msgbox "User '$username' has been successfully DISABLED ." 8 50 --title "Success"
+        	else
+            		whiptail --msgbox "Error disabling user '$username'." 8 50 --title "Failure"
+        	fi
+    	else
+        	whiptail --msgbox "Operation cancelled." 8 40
+    	fi
+
+}

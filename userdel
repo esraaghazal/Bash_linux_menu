@@ -23,10 +23,10 @@ userdel()
     	fi
  
 	if	
-		whiptail --title "Delete User" --yesno "WARNING: Are you sure you want to permanently delete user '$username'" 10 60
+		whiptail --title "Delete User" --yesno "WARNING: Are you sure you want to delete user '$username'" 10 60
 	 then
        
-        	whiptail --msgbox "Deleting user $username ..." 8 50 --title "Deleting"
+
 
 
 	#--------------------------- deleting --------------------------------------
@@ -44,4 +44,3 @@ userdel()
             whiptail --msgbox "Deletion of user '$username' cancelled." 8 50
    	fi
 }
-userdel

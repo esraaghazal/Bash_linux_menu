@@ -18,7 +18,7 @@ enableuser()
         	return 1
     	fi
 
-	sudo usermod -U "$usernameVAR"   
+	sudo usermod -U "$username"   
     	if [ $? -eq 0 ]; then
             whiptail --msgbox "User '$username' has been successfully ENABLED ." 8 50 --title "Success"
     	else

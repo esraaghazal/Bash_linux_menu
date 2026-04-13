@@ -12,6 +12,7 @@ enableuser()
         	return 1
     	fi
 #---------------------- check if user exist ---------------------
+	id "$username"
 	if [ $? -ne 0 ]; then
         	whiptail --msgbox "Error: User '$username' does not exist." 8 50 --title "Error"
         	return 1
